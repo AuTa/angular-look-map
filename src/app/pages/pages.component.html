@@ -1,0 +1,9 @@
+<h2>Pages</h2>
+<ul class="pages">
+  <li *ngFor="let page of pages">
+    <a routerLink='/page/{{page.uuid}}'>
+      {{page.title}}
+      <span>{{page.latitude}}</span>\<span>{{page.longitude}}</span>
+    </a>
+  </li>
+</ul>

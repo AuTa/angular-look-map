@@ -1,0 +1,14 @@
+<div *ngIf="page">
+  <h2>{{page.title}}</h2>
+  <div>
+    <label>latitude:
+      <input [(ngModel)]="page.latitude" placeholder="latitude">
+    </label>
+  </div>
+  <div>
+    <label>longitude:
+      <input [(ngModel)]="page.longitude" placeholder="longitude">
+    </label>
+  </div>
+</div>
+<button (click)="goBack()">go back</button>
