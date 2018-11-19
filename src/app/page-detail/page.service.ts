@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Page } from './page';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { MessageService } from '../messages/message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -9,22 +9,33 @@ import { catchError, map, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PageService {
-
-  private pagesUrl = 'api/pages';
+  private _pages: BehaviorSubject<Page[]> = new BehaviorSubject([]);
+  private baseUrl = 'api/pages';
+  private dataStore: {  // This is where we will store our data in memory
+    pages: Page[]
+  } = { pages: [] };
 
   constructor(
     private http: HttpClient,
     private messageService: MessageService) { }
 
-  getPages(): Observable<Page[]> {
-    return this.http.get<Page[]>(this.pagesUrl)
+  get pages() {
+    return this._pages.asObservable();
+  }
+
+  getPages() {
+    this.http.get<Page[]>(this.baseUrl)
       .pipe(
-        tap(pages => this.log('fetched pages')),
+        tap(pages => {
+          this.dataStore.pages = pages;
+          this._pages.next(Object.assign({}, this.dataStore).pages);
+          this.log('fetched pages');
+        }),
         catchError(this.handleError('getPages', [])));
   }
 
   getPage(uuid: string): Observable<Page> {
-    const url = `${this.pagesUrl}/${uuid}`;
+    const url = `${this.baseUrl}/${uuid}`;
     this.messageService.add(`PageService: fetched page uuid=${uuid}`);
     return this.http.get<Page>(url).pipe(
       tap(_ => this.log(`fetched page uuid=${uuid}`)),

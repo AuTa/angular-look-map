@@ -30,7 +30,7 @@ export class PageDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.location.back()
+    this.location.back();
   }
 
 }
