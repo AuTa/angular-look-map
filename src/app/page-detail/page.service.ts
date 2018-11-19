@@ -9,6 +9,7 @@ import { catchError, map, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PageService {
+  pages: Observable<Page[]>;
   private _pages: BehaviorSubject<Page[]> = new BehaviorSubject([]);
   private baseUrl = 'api/pages';
   private dataStore: {  // This is where we will store our data in memory
@@ -17,24 +18,28 @@ export class PageService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService) { }
-
-  get pages() {
-    return this._pages.asObservable();
-  }
+    private messageService: MessageService) {
+      this.pages = this._pages.asObservable();
+     }
 
   getPages() {
     this.http.get<Page[]>(this.baseUrl)
-      .pipe(
-        tap(pages => {
+      .subscribe(pages => {
           this.dataStore.pages = pages;
           this._pages.next(Object.assign({}, this.dataStore).pages);
           this.log('fetched pages');
-        }),
-        catchError(this.handleError('getPages', [])));
+        },
+        catchError(this.handleError(`getPages`, [])));
   }
 
-  getPage(uuid: string): Observable<Page> {
+  getPage(uuid: string) {
+    let notFound = true;
+
+    this.dataStore.pages.forEach((item, index) => {
+      if (item.uuid === uuid) {
+        notFound = false;
+      }
+    })
     const url = `${this.baseUrl}/${uuid}`;
     this.messageService.add(`PageService: fetched page uuid=${uuid}`);
     return this.http.get<Page>(url).pipe(
