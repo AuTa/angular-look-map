@@ -21,16 +21,19 @@ export class PageDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getPage();
+    // this.getPage();
   }
 
-  getPage(): void {
-    const uuid = this.route.snapshot.paramMap.get('uuid');
-    this.pageService.getPage(uuid).subscribe(page => this.page = page);
-  }
+  // getPage(): void {
+  //   const uuid = this.route.snapshot.paramMap.get('uuid');
+  //   this.pageService.getPage(uuid).subscribe(page => this.page = page);
+  // }
 
-  goBack(): void {
-    this.location.back();
+  // goBack(): void {
+  //   this.location.back();
+  // }
+  confirm(): void {
+    this.pageService.updatePage(this.page);
   }
 
 }

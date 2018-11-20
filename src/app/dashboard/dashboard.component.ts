@@ -17,7 +17,6 @@ export class DashboardComponent implements OnInit {
   }
 
   getPages(): void {
-    this.pageService.getPages()
-      .subscribe(pages => this.pages = pages.slice(1, 5));
+    this.pageService.getPages();
   }
 }

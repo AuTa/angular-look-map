@@ -4,32 +4,80 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
 import { MessageService } from '../messages/message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
+import { isArray } from 'util';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PageService {
   pages: Observable<Page[]>;
+  showPages: Observable<Page[]>;
   private _pages: BehaviorSubject<Page[]> = new BehaviorSubject([]);
+  private _showPages: BehaviorSubject<Page[]> = new BehaviorSubject([]);
   private baseUrl = 'api/pages';
   private dataStore: {  // This is where we will store our data in memory
     pages: Page[]
   } = { pages: [] };
+  private showQuery: {} = {};
 
   constructor(
     private http: HttpClient,
     private messageService: MessageService) {
-      this.pages = this._pages.asObservable();
-     }
+    this.pages = this._pages.asObservable();
+    this.showPages = this._showPages.asObservable();
+  }
 
   getPages() {
     this.http.get<Page[]>(this.baseUrl)
       .subscribe(pages => {
-          this.dataStore.pages = pages;
-          this._pages.next(Object.assign({}, this.dataStore).pages);
-          this.log('fetched pages');
-        },
+        this.dataStore.pages = pages;
+        this._pages.next(Object.assign({}, this.dataStore).pages);
+        this.setShowPages();
+        this.log('fetched pages');
+      },
         catchError(this.handleError(`getPages`, [])));
+  }
+
+  setShowQuery(protery: string, matchs: any[]) {
+    this.showQuery[protery] = matchs;
+    this.setShowPages();
+  }
+
+  setShowPages() {
+    let pages = Object.assign({}, this.dataStore).pages;
+    if (this.showQuery) {
+      for (const protery in this.showQuery) {
+        if (this.showQuery.hasOwnProperty(protery)) {
+          const matchs = this.showQuery[protery];
+          if (!isArray(matchs) || matchs.length === 0) {
+            continue;
+          }
+          const proterys = protery.split('.');
+          pages = pages.filter(page => {
+            let v: any = page;
+            proterys.forEach(p => {
+              try {
+                v = v[p];
+              } catch (e) {
+                throw new Error(`protery error`);
+              }
+            });
+            return matchs.indexOf(v) !== -1;
+          });
+        }
+      }
+    }
+    this._showPages.next(pages);
+  }
+
+  updatePage(page: Page) {
+    this.dataStore.pages.forEach((t, i) => {
+      if (t.uuid === page.uuid && t !== page) {
+        this.dataStore.pages[i] = page;
+      }
+    });
+
+    this._pages.next(Object.assign({}, this.dataStore).pages);
   }
 
   getPage(uuid: string) {
@@ -39,7 +87,7 @@ export class PageService {
       if (item.uuid === uuid) {
         notFound = false;
       }
-    })
+    });
     const url = `${this.baseUrl}/${uuid}`;
     this.messageService.add(`PageService: fetched page uuid=${uuid}`);
     return this.http.get<Page>(url).pipe(

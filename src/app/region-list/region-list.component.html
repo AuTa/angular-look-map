@@ -1,0 +1,10 @@
+<p>
+  territory-list works!
+</p>
+<ul class="region_list">
+  <li *ngFor="let region of showRegions" 
+  [class.selected]="region === selectedRegion"
+  (click)="onSelect(region)">
+      <span>{{region.text}}({{region.count}})</span>
+  </li>
+</ul>

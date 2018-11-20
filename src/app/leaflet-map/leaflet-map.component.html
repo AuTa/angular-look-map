@@ -1,0 +1,7 @@
+<div class="map"
+     leaflet 
+     [leafletOptions]="options"
+     [leafletLayersControl]="layersControl"
+     [leafletFitBounds]="fitBounds">
+     <div *ngFor="let l of layers" [leafletLayer]="l"></div>
+</div>
