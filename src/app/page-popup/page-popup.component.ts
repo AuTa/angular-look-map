@@ -1,18 +1,24 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Page } from '../page-detail/page';
 
 @Component({
   selector: 'app-page-popup',
-  template: `<span> {{ page }} </span>`,
+  templateUrl: 'page-popup.component.html',
+  styleUrls: ['page-popup.component.css']
 })
 export class PagePopupComponent implements OnInit {
 
-  @Input() page: string;
+  @Input() uuid: string;
+  @Input() title: string;
+  @Input() author: string;
+  @Input() url: string;
+  @Input() image_alt: string;
+  @Input() image_url: string;
 
   @Output()
   closed = new EventEmitter();
 
-  constructor() { }
+  constructor() {
+   }
 
   ngOnInit() {
   }

@@ -1,4 +1,16 @@
 .map {
-    height: 300px;
-    padding: 0;
-  }
+  height: 300px;
+  padding: 0;
+}
+
+.leaflet-popup-content {
+  width: 180px;
+  margin: 0 !important;
+  padding: 0;
+}
+
+.leaflet-popup-content-wrapper {
+  padding: 0px!important;
+  border-radius: unset!important;
+  background: hsla(0, 0%, 100%, .5)!important;
+}

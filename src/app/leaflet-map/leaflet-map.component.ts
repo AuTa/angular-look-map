@@ -1,59 +1,75 @@
-import { Component, OnInit, Input, Injector } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { createCustomElement, NgElement, WithProperties } from '@angular/elements';
 
-import { tileLayer, latLng, Map, circle, polygon, Layer, marker, LatLngBounds, LatLng, popup, LeafletMouseEvent } from 'leaflet';
+import {
+  tileLayer, latLng, marker, popup, control,
+  Map, Layer, LatLngBounds, LatLng, Popup, TileLayer, MapOptions, Control,
+  LeafletMouseEvent, LeafletEvent
+} from 'leaflet';
 import 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/images/marker-icon.png';
 
 import { Page } from '../page-detail/page';
 import { PagePopupComponent } from '../page-popup/page-popup.component';
+import { PagePopupService } from '../page-popup/page-popup.service';
 
 @Component({
+  providers: [PagePopupService],
   selector: 'app-leaflet-map',
   templateUrl: './leaflet-map.component.html',
-  styleUrls: ['./leaflet-map.component.css']
+  styleUrls: ['./leaflet-map.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LeafletMapComponent implements OnInit {
-  mapConfig = { minZoom: 3, maxZoom: 16, zoom: 4 };
-  autonaviMaps = tileLayer('https://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
-    minZoom: this.mapConfig.minZoom,
-    maxZoom: this.mapConfig.maxZoom,
-    detectRetina: true,
-    attribution: '<a href="https://ditu.amap.com/">高德地图</a> &copy;'
-  });
-  googleSatelMaps = tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
-    minZoom: this.mapConfig.minZoom,
-    maxZoom: this.mapConfig.maxZoom,
-    detectRetina: true,
-    attribution: '<a href="https://www.google.com/maps">谷歌地图</a> &copy;'
-  });
-  googleMaps = tileLayer('http://mt1.google.cn/vt/lyrs=m@207000000&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galile', {
-    minZoom: this.mapConfig.minZoom,
-    maxZoom: this.mapConfig.maxZoom,
-    detectRetina: true,
-    attribution: '<a href="https://www.google.com/maps">谷歌地图</a> &copy;'
-  });
-  center = latLng(36.69, 107.34);
-  options = {
-    layers: [
-      this.autonaviMaps
-    ],
-    zoom: this.mapConfig.zoom,
-    center: this.center,
-    zoomSnap: 1.5,
-  };
-  layersControl = {
-    baseLayers: {
-      '高德地图': this.autonaviMaps,
-      '谷歌影像': this.googleSatelMaps,
-      '谷歌地图': this.googleMaps
-    }
-  };
+
+  mapConfig: { minZoom: number, maxZoom: number, zoom: number };
+  center: LatLng;
+  options: MapOptions;
+  layersControl: Control.Layers;
 
   fitBounds: LatLngBounds;
   layers: Layer[];
 
-  constructor() {
+  private autonaviMaps: TileLayer;
+  private googleSatelMaps: TileLayer;
+  private googleMaps: TileLayer;
+
+  constructor(private pagePopupService: PagePopupService) {
+    this.mapConfig = { minZoom: 3, maxZoom: 16, zoom: 4 };
+    this.autonaviMaps = tileLayer('https://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
+      minZoom: this.mapConfig.minZoom,
+      maxZoom: this.mapConfig.maxZoom,
+      detectRetina: true,
+      attribution: '<a href="https://ditu.amap.com/">高德地图</a> &copy;'
+    });
+    this.googleSatelMaps = tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
+      minZoom: this.mapConfig.minZoom,
+      maxZoom: this.mapConfig.maxZoom,
+      detectRetina: true,
+      attribution: '<a href="https://www.google.com/maps">谷歌地图</a> &copy;'
+    });
+    this.googleMaps = tileLayer('http://mt1.google.cn/vt/lyrs=m@207000000&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galile', {
+      minZoom: this.mapConfig.minZoom,
+      maxZoom: this.mapConfig.maxZoom,
+      detectRetina: true,
+      attribution: '<a href="https://www.google.com/maps">谷歌地图</a> &copy;'
+    });
+    this.center = latLng(36.69, 107.34);
+    this.options = {
+      layers: [
+        this.autonaviMaps
+      ],
+      zoom: this.mapConfig.zoom,
+      center: this.center,
+      zoomSnap: 1.5,
+    };
+    this.layersControl = control.layers(
+      {
+        '高德地图': this.autonaviMaps,
+        '谷歌影像': this.googleSatelMaps,
+        '谷歌地图': this.googleMaps
+      }
+    );
   }
 
   @Input()
@@ -64,16 +80,19 @@ export class LeafletMapComponent implements OnInit {
     if (pages.length > 0) {
       pages.forEach(page => {
         const pageMaker = marker([page.latitude, page.longitude]);
-        pageMaker.bindPopup(l => {
-          const pagePopup: NgElement & WithProperties<PagePopupComponent> = document.createElement('popup-element') as any;
-          pagePopup.addEventListener('closed', () => document.body.removeChild(pagePopup));
-          pagePopup.page = '123';
-          // Add to the DOM
-          document.body.appendChild(pagePopup);
-          return pagePopup;
+        pageMaker.bindPopup(l => this.pagePopupService.buildPagePopup(page), {
+          minWidth: 180,
+          maxWidth: 180,
+          closeButton: false
         });
         pageMaker.on({
-          mouseover: (ev: LeafletMouseEvent) => { alert(page.title + ev.latlng); },
+          // mouseover: (ev: LeafletMouseEvent) => { alert(page.title + ev.latlng); },
+          popupopen: (ev) => {
+            ev.popup._contentNode.removeAttribute('style');
+          },
+          popupclose: (ev) => {
+
+          }
         });
         this.layers.push(pageMaker);
         latitudes.push(page.latitude);
@@ -90,7 +109,7 @@ export class LeafletMapComponent implements OnInit {
         ]
       );
     } else {
-      this.fitBounds = new LatLngBounds([[this.center.lat, this.center.lng]]);
+      this.fitBounds = new LatLngBounds([[this.center.lat, this.center.lng], [this.center.lat, this.center.lng]]);
     }
   }
 

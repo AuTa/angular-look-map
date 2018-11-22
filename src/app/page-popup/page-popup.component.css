@@ -1,0 +1,14 @@
+.popup-content {
+    position: relative;
+    cursor: pointer;
+    max-height: 540px;
+    overflow-y: hidden;
+}
+
+.popup-title {
+    padding: 5px 5px;
+    line-height: 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.6);
+    color: rgb(102, 186, 183);
+}
