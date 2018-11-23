@@ -12,9 +12,10 @@ import 'leaflet/dist/images/marker-icon.png';
 import { Page } from '../page-detail/page';
 import { PagePopupComponent } from '../page-popup/page-popup.component';
 import { PagePopupService } from '../page-popup/page-popup.service';
+import { PageMarkerService } from '../page-marker/page-marker.service';
 
 @Component({
-  providers: [PagePopupService],
+  providers: [PagePopupService, PageMarkerService],
   selector: 'app-leaflet-map',
   templateUrl: './leaflet-map.component.html',
   styleUrls: ['./leaflet-map.component.css'],
@@ -25,7 +26,7 @@ export class LeafletMapComponent implements OnInit {
   mapConfig: { minZoom: number, maxZoom: number, zoom: number };
   center: LatLng;
   options: MapOptions;
-  layersControl: Control.Layers;
+  layersControl;
 
   fitBounds: LatLngBounds;
   layers: Layer[];
@@ -34,7 +35,7 @@ export class LeafletMapComponent implements OnInit {
   private googleSatelMaps: TileLayer;
   private googleMaps: TileLayer;
 
-  constructor(private pagePopupService: PagePopupService) {
+  constructor(private pageMarkerService: PageMarkerService) {
     this.mapConfig = { minZoom: 3, maxZoom: 16, zoom: 4 };
     this.autonaviMaps = tileLayer('https://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
       minZoom: this.mapConfig.minZoom,
@@ -63,38 +64,22 @@ export class LeafletMapComponent implements OnInit {
       center: this.center,
       zoomSnap: 1.5,
     };
-    this.layersControl = control.layers(
-      {
+    this.layersControl = {
+      'baseLayers': {
         '高德地图': this.autonaviMaps,
         '谷歌影像': this.googleSatelMaps,
         '谷歌地图': this.googleMaps
       }
-    );
+    };
   }
 
   @Input()
   set pages(pages: Page[]) {
-    this.layers = [];
+    this.layers = this.pageMarkerService.getMarkers(pages);
     const latitudes: number[] = [];
     const longitudes: number[] = [];
     if (pages.length > 0) {
       pages.forEach(page => {
-        const pageMaker = marker([page.latitude, page.longitude]);
-        pageMaker.bindPopup(l => this.pagePopupService.buildPagePopup(page), {
-          minWidth: 180,
-          maxWidth: 180,
-          closeButton: false
-        });
-        pageMaker.on({
-          // mouseover: (ev: LeafletMouseEvent) => { alert(page.title + ev.latlng); },
-          popupopen: (ev) => {
-            ev.popup._contentNode.removeAttribute('style');
-          },
-          popupclose: (ev) => {
-
-          }
-        });
-        this.layers.push(pageMaker);
         latitudes.push(page.latitude);
         longitudes.push(page.longitude);
       });
