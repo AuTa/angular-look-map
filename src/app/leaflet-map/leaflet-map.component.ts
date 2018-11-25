@@ -1,21 +1,22 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { createCustomElement, NgElement, WithProperties } from '@angular/elements';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import {
-  tileLayer, latLng, marker, popup, control,
-  Map, Layer, LatLngBounds, LatLng, Popup, TileLayer, MapOptions, Control,
-  LeafletMouseEvent, LeafletEvent
+  tileLayer, latLng,
+  Layer, LatLngBounds, LatLng, TileLayer, MapOptions, Map, LayersControlEvent,
 } from 'leaflet';
 import 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/images/marker-icon.png';
+import 'leaflet/dist/images/marker-icon-2x.png';
 
 import { Page } from '../page-detail/page';
-import { PagePopupComponent } from '../page-popup/page-popup.component';
-import { PagePopupService } from '../page-popup/page-popup.service';
-import { PageMarkerService } from '../page-marker/page-marker.service';
+import { PagePopupService } from '../_services/page-popup.service';
+import { PageService } from '../_services/page.service';
+import { LeafletDirective } from '@asymmetrik/ngx-leaflet';
+import { MapService } from '../_services/map.service';
 
 @Component({
-  providers: [PagePopupService, PageMarkerService],
+  providers: [PagePopupService, LeafletDirective],
   selector: 'app-leaflet-map',
   templateUrl: './leaflet-map.component.html',
   styleUrls: ['./leaflet-map.component.css'],
@@ -24,58 +25,39 @@ import { PageMarkerService } from '../page-marker/page-marker.service';
 export class LeafletMapComponent implements OnInit {
 
   mapConfig: { minZoom: number, maxZoom: number, zoom: number };
-  center: LatLng;
   options: MapOptions;
   layersControl;
-
   fitBounds: LatLngBounds;
   layers: Layer[];
 
-  private autonaviMaps: TileLayer;
-  private googleSatelMaps: TileLayer;
-  private googleMaps: TileLayer;
+  pages$: Observable<Page[]>;
+  selectedPage$: Observable<Page>;
 
-  constructor(private pageMarkerService: PageMarkerService) {
-    this.mapConfig = { minZoom: 3, maxZoom: 16, zoom: 4 };
-    this.autonaviMaps = tileLayer('https://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
-      minZoom: this.mapConfig.minZoom,
-      maxZoom: this.mapConfig.maxZoom,
-      detectRetina: true,
-      attribution: '<a href="https://ditu.amap.com/">高德地图</a> &copy;'
-    });
-    this.googleSatelMaps = tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
-      minZoom: this.mapConfig.minZoom,
-      maxZoom: this.mapConfig.maxZoom,
-      detectRetina: true,
-      attribution: '<a href="https://www.google.com/maps">谷歌地图</a> &copy;'
-    });
-    this.googleMaps = tileLayer('http://mt1.google.cn/vt/lyrs=m@207000000&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Galile', {
-      minZoom: this.mapConfig.minZoom,
-      maxZoom: this.mapConfig.maxZoom,
-      detectRetina: true,
-      attribution: '<a href="https://www.google.com/maps">谷歌地图</a> &copy;'
-    });
-    this.center = latLng(36.69, 107.34);
+  constructor(private mapService: MapService, private pageService: PageService) {
     this.options = {
       layers: [
-        this.autonaviMaps
+        this.mapService.baseLayer
       ],
-      zoom: this.mapConfig.zoom,
-      center: this.center,
+      zoom: this.mapService.mapConfig.zoom,
+      center: this.mapService.center,
       zoomSnap: 1.5,
     };
     this.layersControl = {
       'baseLayers': {
-        '高德地图': this.autonaviMaps,
-        '谷歌影像': this.googleSatelMaps,
-        '谷歌地图': this.googleMaps
+        '高德地图': this.mapService.autonaviMaps(),
+        '谷歌影像': this.mapService.googleSatelMaps(),
+        '谷歌地图': this.mapService.googleMaps()
       }
     };
   }
 
-  @Input()
-  set pages(pages: Page[]) {
-    this.layers = this.pageMarkerService.getMarkers(pages);
+  ngOnInit() {
+    this.pages$ = this.pageService.showPages;
+    this.pages$.subscribe(pages => this.changeFitBounds(pages));
+    this.selectedPage$ = this.pageService.selectedPage;
+  }
+
+  changeFitBounds(pages: Page[]) {
     const latitudes: number[] = [];
     const longitudes: number[] = [];
     if (pages.length > 0) {
@@ -83,10 +65,12 @@ export class LeafletMapComponent implements OnInit {
         latitudes.push(page.latitude);
         longitudes.push(page.longitude);
       });
+
       const latitudeMin = Math.min.apply(null, latitudes);
       const latitudeMax = Math.max.apply(null, latitudes);
       const longitudeMin = Math.min.apply(null, longitudes);
       const longitudeMax = Math.max.apply(null, longitudes);
+
       this.fitBounds = new LatLngBounds(
         [
           [latitudeMin, longitudeMin],
@@ -94,15 +78,14 @@ export class LeafletMapComponent implements OnInit {
         ]
       );
     } else {
-      this.fitBounds = new LatLngBounds([[this.center.lat, this.center.lng], [this.center.lat, this.center.lng]]);
+      this.fitBounds = new LatLngBounds([
+        [this.mapService.center.lat, this.mapService.center.lng],
+        [this.mapService.center.lat, this.mapService.center.lng]
+      ]);
     }
   }
 
-  ngOnInit() {
-  }
-
   onMapReady(map: Map) {
-
+    map.on('baselayerchange', (ev: LayersControlEvent) => {});
   }
-
 }

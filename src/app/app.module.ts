@@ -18,6 +18,8 @@ import { RegionListComponent } from './region-list/region-list.component';
 import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
 import { PagePopupComponent } from './page-popup/page-popup.component';
 import { createCustomElement } from '@angular/elements';
+import { PageMarkerDirective } from './page-marker/page-marker.directive';
+import { PageContentComponent } from './page-content/page-content.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { createCustomElement } from '@angular/elements';
     AlertComponent,
     RegionListComponent,
     LeafletMapComponent,
-    PagePopupComponent
+    PagePopupComponent,
+    PageMarkerDirective,
+    PageContentComponent
   ],
   imports: [
     BrowserModule,

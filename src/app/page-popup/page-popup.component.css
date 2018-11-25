@@ -1,8 +1,12 @@
-.popup-content {
+.popup-image {
     position: relative;
     cursor: pointer;
     max-height: 540px;
     overflow-y: hidden;
+}
+
+.popup-image img {
+    display: block;
 }
 
 .popup-title {

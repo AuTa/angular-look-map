@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Page } from '../page-detail/page';
-import { PageService } from '../page-detail/page.service';
+import { PageService } from '../_services/page.service';
 import { Observable } from 'rxjs';
 import { RegionListComponent } from '../region-list/region-list.component';
 

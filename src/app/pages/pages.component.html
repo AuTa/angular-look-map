@@ -11,4 +11,6 @@
 </ul>
 <app-page-detail [page]="selectedPage" *ngIf="selectedPage"></app-page-detail>
 <app-region-list></app-region-list>
-<app-leaflet-map [pages]="pages"></app-leaflet-map>
+<div class="leaflet-map">
+  <app-leaflet-map ></app-leaflet-map>
+</div>

@@ -1,0 +1,12 @@
+<div class="image">
+  <img [src]="page.information.image_url" [alt]="page.information.image_alt" width="180px">
+</div>
+<div class="title">
+  <span>{{page.title}}</span>
+</div>
+<div class="map" 
+     leaflet
+     [leafletOptions]="options"
+     [(leafletCenter)]="center">
+<ng-component [leafletLayer]="marker"></ng-component>
+</div>

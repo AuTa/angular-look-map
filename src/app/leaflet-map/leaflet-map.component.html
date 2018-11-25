@@ -1,7 +1,13 @@
-<div class="map"
+<div class="map" 
      leaflet 
-     [leafletOptions]="options"
+     [leafletOptions]="options" 
      [leafletLayersControl]="layersControl"
-     [leafletFitBounds]="fitBounds">
-     <div *ngFor="let l of layers" [leafletLayer]="l"></div>
+     [leafletFitBounds]="fitBounds" 
+     (leafletMapReady)="onMapReady($event)">
+  <ng-component *ngFor="let l of pages$ | async" [pageMarker]="l"></ng-component>
+</div>
+<div class="page-content" *ngIf="selectedPage$ | async">
+  <div class="content">
+    <app-page-content [page]="selectedPage$ | async"></app-page-content>
+  </div>
 </div>

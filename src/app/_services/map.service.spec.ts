@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PageMarkerService } from './page-marker.service';
+import { MapService } from './map.service';
 
-describe('PageMarkerService', () => {
+describe('MapService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: PageMarkerService = TestBed.get(PageMarkerService);
+    const service: MapService = TestBed.get(MapService);
     expect(service).toBeTruthy();
   });
 });

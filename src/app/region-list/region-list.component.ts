@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Region, ALL_REGION, REGIONS, OTHER_REGION } from './region';
 import { Page } from '../page-detail/page';
-import { PageService } from '../page-detail/page.service';
+import { PageService } from '../_services/page.service';
 import { Observable } from 'rxjs';
 
 @Component({

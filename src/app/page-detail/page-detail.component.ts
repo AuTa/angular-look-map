@@ -3,7 +3,7 @@ import { Page } from './page';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { PageService } from './page.service';
+import { PageService } from '../_services/page.service';
 
 @Component({
   selector: 'app-page-detail',

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Page } from './page';
+import { Page } from '../page-detail/page';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { MessageService } from '../messages/message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -12,8 +12,11 @@ import { isArray } from 'util';
 export class PageService {
   pages: Observable<Page[]>;
   showPages: Observable<Page[]>;
+  selectedPage: Observable<Page>;
   private _pages: BehaviorSubject<Page[]> = new BehaviorSubject([]);
   private _showPages: BehaviorSubject<Page[]> = new BehaviorSubject([]);
+  private _selectedPage: BehaviorSubject<Page> = new BehaviorSubject(undefined);
+  private _hasSelectedPage = false;
   private baseUrl = 'api/pages';
   private dataStore: {  // This is where we will store our data in memory
     pages: Page[]
@@ -25,6 +28,7 @@ export class PageService {
     private messageService: MessageService) {
     this.pages = this._pages.asObservable();
     this.showPages = this._showPages.asObservable();
+    this.selectedPage = this._selectedPage.asObservable();
   }
 
   getPages() {
@@ -68,6 +72,20 @@ export class PageService {
       }
     }
     this._showPages.next(pages);
+  }
+
+  bindSelectedPage(page: Page) {
+    if (this._hasSelectedPage) {
+      throw new Error('Page has selected.');
+    } else {
+      this._selectedPage.next(page);
+      this._hasSelectedPage = true;
+    }
+  }
+
+  unbindSelectedPage() {
+    this._selectedPage.next(undefined);
+    this._hasSelectedPage = false;
   }
 
   updatePage(page: Page) {

@@ -4,12 +4,12 @@ export class Page {
     longitude: number;
     title: string;
     information: {
-        alt: string;
+        image_alt: string;
         url: string,
         color: string,
         author: string,
         protag: string,
-        content: string,
+        image_url: string,
         category: string[],
         contag: string
     };

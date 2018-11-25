@@ -1,5 +1,6 @@
 .map {
-  height: 300px;
+  height: 100%;
+  width: 100%;
   padding: 0;
 }
 
@@ -10,7 +11,27 @@
 }
 
 .leaflet-popup-content-wrapper {
-  padding: 0px!important;
-  border-radius: unset!important;
-  background: hsla(0, 0%, 100%, .5)!important;
+  padding: 0px !important;
+  border-radius: unset !important;
+  background: hsla(0, 0%, 100%, .5) !important;
+}
+
+.page-content {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-content .content {
+  height: 50%;
+  width: 60%;
+  background: #fff;
+  box-shadow: 0 10px 42px rgba(0,0,0,0.4);
 }
