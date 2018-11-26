@@ -2,6 +2,7 @@
      leaflet 
      [leafletOptions]="options" 
      [leafletLayersControl]="layersControl"
+     [leafletLayersControlOptions]="layersControlOptions"
      [leafletFitBounds]="fitBounds" 
      (leafletMapReady)="onMapReady($event)">
   <ng-component *ngFor="let l of pages$ | async" [pageMarker]="l"></ng-component>

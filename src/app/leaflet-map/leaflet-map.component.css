@@ -27,9 +27,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #ffffff40;
 }
 
-.page-content .content {
+.page-content>.content {
   height: 50%;
   width: 60%;
   background: #fff;

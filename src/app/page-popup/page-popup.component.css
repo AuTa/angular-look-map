@@ -5,7 +5,7 @@
     overflow-y: hidden;
 }
 
-.popup-image img {
+.popup-image>img {
     display: block;
 }
 

@@ -1,12 +1,22 @@
-<div class="image">
-  <img [src]="page.information.image_url" [alt]="page.information.image_alt" width="180px">
-</div>
-<div class="title">
-  <span>{{page.title}}</span>
-</div>
-<div class="map" 
-     leaflet
-     [leafletOptions]="options"
-     [(leafletCenter)]="center">
-<ng-component [leafletLayer]="marker"></ng-component>
+<div class="container">
+  <div class="page">
+    <div class="image">
+      <img [src]="page.information.image_url" [alt]="page.information.image_alt">
+    </div>
+    <div class="content">
+      <textarea class="title" [(ngModel)]="page.title" [autoGrowTextArea]="page.title"></textarea>
+
+        <div class="geo">
+          <input type="text" [(ngModel)]="page.latitude" (input)="updateLatLng()" placeholder="Latitude"> / <input type="text" [(ngModel)]="page.longitude"
+            placeholder="Longitude"></div>
+    <textarea class="author" [(ngModel)]="page.information.author" [autoGrowTextArea]="page.information.author"></textarea>
+    <textarea class="author" [(ngModel)]="page.information.author" [autoGrowTextArea]="page.information.author"></textarea>
+    <textarea class="author" [(ngModel)]="page.information.author" [autoGrowTextArea]="page.information.author"></textarea>
+    <textarea class="author" [(ngModel)]="page.information.author" [autoGrowTextArea]="page.information.author"></textarea>
+    <textarea class="author" [(ngModel)]="page.information.author" [autoGrowTextArea]="page.information.author"></textarea>
+    </div>
+  </div>
+  <div class="map" leaflet [leafletOptions]="options" [(leafletCenter)]="center">
+    <ng-component [leafletLayer]="marker"></ng-component>
+  </div>
 </div>

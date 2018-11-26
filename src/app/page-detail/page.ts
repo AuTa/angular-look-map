@@ -11,6 +11,7 @@ export class Page {
         protag: string,
         image_url: string,
         category: string[],
-        contag: string
+        contag: string,
+        content?: string
     };
 }

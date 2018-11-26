@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 import {
   tileLayer, latLng,
-  Layer, LatLngBounds, LatLng, TileLayer, MapOptions, Map, LayersControlEvent,
+  Layer, LatLngBounds, LatLng, TileLayer, MapOptions, Map, LayersControlEvent, control, Control,
 } from 'leaflet';
 import 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/images/marker-icon.png';
@@ -27,6 +27,7 @@ export class LeafletMapComponent implements OnInit {
   mapConfig: { minZoom: number, maxZoom: number, zoom: number };
   options: MapOptions;
   layersControl;
+  layersControlOptions: Control.LayersOptions;
   fitBounds: LatLngBounds;
   layers: Layer[];
 
@@ -34,20 +35,19 @@ export class LeafletMapComponent implements OnInit {
   selectedPage$: Observable<Page>;
 
   constructor(private mapService: MapService, private pageService: PageService) {
+    this.layersControl = {
+      baseLayers: this.mapService.baseLayers
+    };
     this.options = {
       layers: [
-        this.mapService.baseLayer
+        this.layersControl.baseLayers['高德地图']
       ],
       zoom: this.mapService.mapConfig.zoom,
       center: this.mapService.center,
       zoomSnap: 1.5,
     };
-    this.layersControl = {
-      'baseLayers': {
-        '高德地图': this.mapService.autonaviMaps(),
-        '谷歌影像': this.mapService.googleSatelMaps(),
-        '谷歌地图': this.mapService.googleMaps()
-      }
+    this.layersControlOptions = {
+      position: 'bottomleft'
     };
   }
 
@@ -86,6 +86,7 @@ export class LeafletMapComponent implements OnInit {
   }
 
   onMapReady(map: Map) {
-    map.on('baselayerchange', (ev: LayersControlEvent) => {});
+    map.on('baselayerchange', (ev: LayersControlEvent) => {this.mapService.setBaseLayer(ev.name); });
+    control.scale().addTo(map);
   }
 }

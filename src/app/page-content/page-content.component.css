@@ -1,0 +1,43 @@
+.container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.page {
+    flex: 1;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.image {
+    width: 100%;
+}
+
+.image>img {
+    display: block;
+    width: 100%;
+}
+
+.map {
+    flex: 2;
+    height: 100%;
+}
+
+.content {
+    width: calc(100% - 0.4em);
+    padding: 0.2em;
+}
+
+.title {
+    font-size: 1.2em;
+    padding: 0;
+    border: 0;
+    width: 100%;
+    resize: none;
+}
+
+.geo>input {
+    width: 40%;
+}

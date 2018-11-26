@@ -20,6 +20,8 @@ import { PagePopupComponent } from './page-popup/page-popup.component';
 import { createCustomElement } from '@angular/elements';
 import { PageMarkerDirective } from './page-marker/page-marker.directive';
 import { PageContentComponent } from './page-content/page-content.component';
+import { AutoGrowTextAreaDirective } from './_directive/auto-grow-text-area.directive';
+import { LatLngMarkerDirective } from './_directive/lat-lng-marker.directive';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { PageContentComponent } from './page-content/page-content.component';
     LeafletMapComponent,
     PagePopupComponent,
     PageMarkerDirective,
-    PageContentComponent
+    PageContentComponent,
+    AutoGrowTextAreaDirective,
+    LatLngMarkerDirective
   ],
   imports: [
     BrowserModule,
