@@ -51,6 +51,7 @@ export class PageContentComponent implements OnInit, AfterContentInit {
 
   updateLatLng() {
     this.marker.setLatLng([this.page.latitude, this.page.longitude]);
+    this.center = latLng(this.page.latitude, this.page.longitude);
   }
 
 }
