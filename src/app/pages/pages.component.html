@@ -1,15 +1,4 @@
 <h2>Pages</h2>
-<ul class="pages">
-  <li *ngFor="let page of pages" 
-  [class.selected]="page === selectedPage"
-  (click)="onSelect(page)">
-    <!-- <a routerLink='/page/{{page.uuid}}'> -->
-      {{page.title}}
-      <span>{{page.latitude}}</span>\<span>{{page.longitude}}</span>
-    <!-- </a> -->
-  </li>
-</ul>
-<app-page-detail [page]="selectedPage" *ngIf="selectedPage"></app-page-detail>
 <app-region-list></app-region-list>
 <div class="leaflet-map">
   <app-leaflet-map ></app-leaflet-map>

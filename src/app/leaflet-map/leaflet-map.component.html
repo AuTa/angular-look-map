@@ -7,8 +7,8 @@
      (leafletMapReady)="onMapReady($event)">
   <ng-component *ngFor="let l of pages$ | async" [pageMarker]="l"></ng-component>
 </div>
-<div class="page-content" *ngIf="selectedPage$ | async">
-  <div class="content">
+<div class="page-content" *ngIf="selectedPage$ | async" (click)="onCloseClick()">
+  <div class="content" (click)="onContentClick($event)">
     <app-page-content [page]="selectedPage$ | async"></app-page-content>
   </div>
 </div>

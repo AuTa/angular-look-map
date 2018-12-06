@@ -31,8 +31,35 @@
 }
 
 .page-content>.content {
-  height: 50%;
+  height: 80%;
   width: 60%;
   background: #fff;
   box-shadow: 0 10px 42px rgba(0,0,0,0.4);
+}
+
+
+/* basic style */
+.close {
+  /* still bad on picking color */
+  background: orange;
+  color: red;
+  /* make a round button */
+  border-radius: 12px;
+  /* center text */
+  line-height: 20px;
+  text-align: center;
+  height: 20px;
+  width: 20px;
+  font-size: 18px;
+  padding: 1px;
+}
+/* use cross as close button */
+.close::before {
+  content: "\2716";
+}
+/* place the button on top-right */
+.close {
+  top: -10px;
+  right: -10px;
+  position: absolute;
 }

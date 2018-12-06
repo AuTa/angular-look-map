@@ -89,4 +89,12 @@ export class LeafletMapComponent implements OnInit {
     map.on('baselayerchange', (ev: LayersControlEvent) => {this.mapService.setBaseLayer(ev.name); });
     control.scale().addTo(map);
   }
+
+  onCloseClick() {
+    this.pageService.unbindSelectedPage();
+  }
+
+  onContentClick(e: Event) {
+    e.stopPropagation();
+  }
 }
