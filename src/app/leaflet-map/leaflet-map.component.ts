@@ -34,6 +34,8 @@ export class LeafletMapComponent implements OnInit {
   pages$: Observable<Page[]>;
   selectedPage$: Observable<Page>;
 
+  sideBarIsOpened = false;
+
   constructor(private mapService: MapService, private pageService: PageService) {
     this.layersControl = {
       baseLayers: this.mapService.baseLayers
@@ -96,5 +98,9 @@ export class LeafletMapComponent implements OnInit {
 
   onContentClick(e: Event) {
     e.stopPropagation();
+  }
+
+  toggleSideBar(shouldOpen: boolean) {
+    this.sideBarIsOpened = !this.sideBarIsOpened;
   }
 }

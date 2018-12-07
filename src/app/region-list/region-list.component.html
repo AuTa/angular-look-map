@@ -1,10 +1,16 @@
-<p>
-  territory-list works!
-</p>
-<ul class="region_list">
+<!-- <ul class="region-list">
   <li *ngFor="let region of showRegions" 
   [class.selected]="region === selectedRegion"
   (click)="onSelect(region)">
       <span>{{region.text}}({{region.count}})</span>
   </li>
-</ul>
+</ul> -->
+
+<select [ngModel]="selectedRegion" (ngModelChange)="onSelect($event)">
+  <option *ngFor="let region of showRegions" 
+  [class.selected]="region === selectedRegion"
+  [ngValue]="region"
+  (click)="onSelect(region)">
+      <span>{{region.text}}({{region.count}})</span>
+      </option>
+</select>

@@ -1,4 +1,22 @@
 .selected {
-    background-color: #CFD8DC !important;
-    color: white;
-  }
+  background-color: rgba(167, 158, 141, 0.8) !important;
+  color: white;
+}
+
+.region-list {
+  list-style: none;
+  padding: 0;
+}
+
+.region-list>li {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  text-align: left;
+  margin-top: 0px;
+  padding-left: 6px;
+}
+
+.region-list>li:hover {
+  background-color: rgba(221, 202, 166, 0.8) !important;
+}

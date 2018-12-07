@@ -37,29 +37,18 @@
   box-shadow: 0 10px 42px rgba(0,0,0,0.4);
 }
 
-
-/* basic style */
-.close {
-  /* still bad on picking color */
-  background: orange;
-  color: red;
-  /* make a round button */
-  border-radius: 12px;
-  /* center text */
-  line-height: 20px;
-  text-align: center;
-  height: 20px;
-  width: 20px;
-  font-size: 18px;
-  padding: 1px;
-}
-/* use cross as close button */
-.close::before {
-  content: "\2716";
-}
-/* place the button on top-right */
-.close {
-  top: -10px;
-  right: -10px;
+.side-bar-container {
   position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 500;
+}
+
+.is-open {
+  height: 100%;
+  width: 20%;
+}
+
+.nav {
+  height: 44px;
 }

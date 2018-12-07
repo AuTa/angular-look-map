@@ -1,0 +1,15 @@
+:host {
+  display: inline-block;
+  cursor: pointer;
+}
+
+:host:hover {
+  background: #ddd;
+}
+
+.avatar {
+  height: 100%;
+  width: 100%;
+  border: 0 solid #fff;
+  border-radius: 50%;
+}

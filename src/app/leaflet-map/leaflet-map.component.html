@@ -7,6 +7,19 @@
      (leafletMapReady)="onMapReady($event)">
   <ng-component *ngFor="let l of pages$ | async" [pageMarker]="l"></ng-component>
 </div>
+<!-- <div class="side-bar-container" [class.is-open]="sideBarIsOpened">
+  <app-side-bar [isOpen]="sideBarIsOpened">
+    <div class="nav">
+      <div class="avatar" *ngIf="sideBarIsOpened">
+        <app-avatar (toggle)="toggleSideBar()"></app-avatar>
+      </div>
+    </div>
+    <app-region-list></app-region-list>
+  </app-side-bar>
+  <div class="avatar" *ngIf="!sideBarIsOpened">
+    <app-avatar (toggle)="toggleSideBar()"></app-avatar>
+  </div>
+</div> -->
 <div class="page-content" *ngIf="selectedPage$ | async" (click)="onCloseClick()">
   <div class="content" (click)="onContentClick($event)">
     <app-page-content [page]="selectedPage$ | async"></app-page-content>

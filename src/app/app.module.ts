@@ -22,6 +22,8 @@ import { PageMarkerDirective } from './page-marker/page-marker.directive';
 import { PageContentComponent } from './page-content/page-content.component';
 import { AutoGrowTextAreaDirective } from './_directive/auto-grow-text-area.directive';
 import { LatLngMarkerDirective } from './_directive/lat-lng-marker.directive';
+import { SideBarComponent } from './side-bar/side-bar.component';
+import { AvatarComponent } from './avatar/avatar.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { LatLngMarkerDirective } from './_directive/lat-lng-marker.directive';
     PageMarkerDirective,
     PageContentComponent,
     AutoGrowTextAreaDirective,
-    LatLngMarkerDirective
+    LatLngMarkerDirective,
+    SideBarComponent,
+    AvatarComponent
   ],
   imports: [
     BrowserModule,

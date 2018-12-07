@@ -15,3 +15,17 @@
   width: 720px;
   position: relative;
 }
+
+.nav {
+  height: 44px;
+  background-color: blanchedalmond;
+}
+
+.avatar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 36px;
+  width: 36px;
+  margin: 4px;
+}
